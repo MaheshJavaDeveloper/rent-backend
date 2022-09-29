@@ -1,7 +1,9 @@
 package com.rent.app.controllers;
 
+import com.rent.app.models.House;
 import com.rent.app.models.Rent;
 import com.rent.app.models.RentStatus;
+import com.rent.app.repository.HouseRepository;
 import com.rent.app.repository.RentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,10 @@ public class RentController {
 
     @Autowired
     RentRepository rentRepository;
+
+    @Autowired
+    HouseRepository houseRepository;
+    private Optional<House> house;
 
     @GetMapping(value = "/rent", produces = "application/json")
     public List<Rent> getRents() {
@@ -51,6 +57,11 @@ public class RentController {
 
     @PatchMapping("/rent")
     public Rent updateRent(@Valid @RequestBody Rent rent) {
+        Optional<House> house= houseRepository.findById(rent.getHouseNumber());
+        if(house.isPresent()){
+            house.get().setOverallMeterReading(rent.getCurrentMeterReading());
+            houseRepository.save(house.get());
+        }
         return rentRepository.save(rent);
     }
 
