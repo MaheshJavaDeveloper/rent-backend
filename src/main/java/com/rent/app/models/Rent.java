@@ -35,6 +35,7 @@ public class Rent {
 
     private Integer totalRent;
 
+    @Enumerated(EnumType.STRING)
     private RentStatus rentStatus;
 
 }

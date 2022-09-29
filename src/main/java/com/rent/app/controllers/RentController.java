@@ -1,6 +1,7 @@
 package com.rent.app.controllers;
 
 import com.rent.app.models.Rent;
+import com.rent.app.models.RentStatus;
 import com.rent.app.repository.RentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,12 @@ public class RentController {
     RentRepository rentRepository;
 
     @GetMapping(value = "/rent", produces = "application/json")
-    public List<Rent> getHouse() {
+    public List<Rent> getRents() {
       return  rentRepository.findAll();
     }
 
     @GetMapping("/rent/{id}")
-    public Rent getHouse(@PathVariable Long id) {
+    public Rent getRent(@PathVariable Long id) {
         Optional<Rent> rent= rentRepository.findById(id);
         if(rent.isPresent()){
             return rent.get();
@@ -33,8 +34,30 @@ public class RentController {
         return null;
     }
 
+    @GetMapping("/rent/house/{id}")
+    public List<Rent> getRentByHouse(@PathVariable Long id) {
+        Optional<List<Rent>> rent= rentRepository.findByHouseNumber(id);
+        if(rent.isPresent()){
+            return rent.get();
+        }
+        return null;
+    }
+
     @PostMapping("/rent")
-    public Rent createHouse(@Valid @RequestBody Rent house) {
-        return rentRepository.save(house);
+    public Rent createRent(@Valid @RequestBody Rent rent) {
+        rent.setRentStatus(RentStatus.GENERATED);
+        return rentRepository.save(rent);
+    }
+
+    @PatchMapping("/rent")
+    public Rent updateRent(@Valid @RequestBody Rent rent) {
+        rent.setRentStatus(RentStatus.GENERATED);
+        return rentRepository.save(rent);
+    }
+
+    @DeleteMapping("/rent/{id}")
+    public String createHouse(@PathVariable Long id) {
+        rentRepository.deleteById(id);
+        return "Successfully Deleted";
     }
 }
