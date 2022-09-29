@@ -52,16 +52,16 @@ public class RentController {
     @PostMapping("/rent")
     public Rent createRent(@Valid @RequestBody Rent rent) {
         rent.setRentStatus(RentStatus.GENERATED);
-        return rentRepository.save(rent);
-    }
-
-    @PatchMapping("/rent")
-    public Rent updateRent(@Valid @RequestBody Rent rent) {
         Optional<House> house= houseRepository.findById(rent.getHouseNumber());
         if(house.isPresent()){
             house.get().setOverallMeterReading(rent.getCurrentMeterReading());
             houseRepository.save(house.get());
         }
+        return rentRepository.save(rent);
+    }
+
+    @PatchMapping("/rent")
+    public Rent updateRent(@Valid @RequestBody Rent rent) {
         return rentRepository.save(rent);
     }
 
