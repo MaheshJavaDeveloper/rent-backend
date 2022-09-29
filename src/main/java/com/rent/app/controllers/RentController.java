@@ -28,13 +28,13 @@ public class RentController {
 
     @GetMapping(value = "/rent", produces = "application/json")
     public List<Rent> getRents() {
-      return  rentRepository.findAll();
+        return rentRepository.findAll();
     }
 
     @GetMapping("/rent/{id}")
     public Rent getRent(@PathVariable Long id) {
-        Optional<Rent> rent= rentRepository.findById(id);
-        if(rent.isPresent()){
+        Optional<Rent> rent = rentRepository.findById(id);
+        if (rent.isPresent()) {
             return rent.get();
         }
         return null;
@@ -42,8 +42,8 @@ public class RentController {
 
     @GetMapping("/rent/house/{id}")
     public List<Rent> getRentByHouse(@PathVariable Long id) {
-        Optional<List<Rent>> rent= rentRepository.findByHouseNumber(id);
-        if(rent.isPresent()){
+        Optional<List<Rent>> rent = rentRepository.findByHouseNumber(id);
+        if (rent.isPresent()) {
             return rent.get();
         }
         return null;
@@ -52,16 +52,23 @@ public class RentController {
     @PostMapping("/rent")
     public Rent createRent(@Valid @RequestBody Rent rent) {
         rent.setRentStatus(RentStatus.GENERATED);
-        Optional<House> house= houseRepository.findById(rent.getHouseNumber());
-        if(house.isPresent()){
-            house.get().setOverallMeterReading(rent.getCurrentMeterReading());
-            houseRepository.save(house.get());
-        }
         return rentRepository.save(rent);
     }
 
     @PatchMapping("/rent")
     public Rent updateRent(@Valid @RequestBody Rent rent) {
+        if (RentStatus.PAID == rent.getRentStatus() || RentStatus.UNPAID == rent.getRentStatus()) {
+            Optional<House> house = houseRepository.findById(rent.getHouseNumber());
+            if (house.isPresent()) {
+                if (RentStatus.PAID == rent.getRentStatus()) {
+                    house.get().setOverallMeterReading(rent.getCurrentMeterReading());
+                }
+                if (RentStatus.UNPAID == rent.getRentStatus()) {
+                    house.get().setOverallMeterReading(rent.getPreviousMeterReading());
+                }
+                houseRepository.save(house.get());
+            }
+        }
         return rentRepository.save(rent);
     }
 
