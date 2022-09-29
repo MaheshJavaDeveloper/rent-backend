@@ -51,7 +51,6 @@ public class RentController {
 
     @PatchMapping("/rent")
     public Rent updateRent(@Valid @RequestBody Rent rent) {
-        rent.setRentStatus(RentStatus.GENERATED);
         return rentRepository.save(rent);
     }
 
