@@ -7,7 +7,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="SCHEMA_01" author="maheshkumar">
-        <sqlFile path="./liquibase/changelogs/roles.sql"/>
+        <sqlFile path="classpath:liquibase/changelogs/roles.sql"/>
         <comment>
             Roles Added.
         </comment>
