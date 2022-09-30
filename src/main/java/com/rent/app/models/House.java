@@ -28,6 +28,8 @@ public class House {
 
     private Long houseOwnerId;
 
+    private Integer pricePerUnit;
+
     @OneToMany
     @JoinColumn(name = "house_id")
     private Set<Rent> rents = new HashSet<>();
