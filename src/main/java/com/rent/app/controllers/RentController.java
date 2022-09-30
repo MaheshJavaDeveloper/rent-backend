@@ -51,10 +51,11 @@ public class RentController {
 
     @PostMapping("/rent")
     public Rent createRent(@Valid @RequestBody Rent rent) {
-        Optional<House> house = houseRepository.findById(rent.getHouseNumber());
         rent.setRentStatus(RentStatus.GENERATED);
+        Rent savedRent=rentRepository.save(rent);
+        Optional<House> house = houseRepository.findById(rent.getHouseNumber());
         if (house.isPresent()) {
-            house.get().getRents().add(rent);
+            house.get().getRents().add(savedRent);
             houseRepository.save(house.get());
         }
         return rent;
