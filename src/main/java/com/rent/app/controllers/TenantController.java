@@ -33,6 +33,14 @@ public class TenantController {
         }
         return null;
     }
+    @GetMapping("/tenant/owner/{id}")
+    public List<Tenant> getHouses(@PathVariable Long id) {
+        Optional<List<Tenant>> tenant= tenantRepository.findByHouseOwnerId(id);
+        if(tenant.isPresent()){
+            return tenant.get();
+        }
+        return null;
+    }
 
     @PostMapping("/tenant")
     public Tenant createHouse(@Valid @RequestBody Tenant tenant) {
