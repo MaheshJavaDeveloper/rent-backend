@@ -33,7 +33,7 @@ public class House {
     private Set<Rent> rents = new HashSet<>();
 
     @OneToOne
-    @JoinColumn(name = "house_id")
+    @JoinColumn(name = "tenant_id")
     private Tenant tenant;
 
 }

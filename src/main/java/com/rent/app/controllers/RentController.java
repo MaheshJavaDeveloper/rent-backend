@@ -51,8 +51,13 @@ public class RentController {
 
     @PostMapping("/rent")
     public Rent createRent(@Valid @RequestBody Rent rent) {
+        Optional<House> house = houseRepository.findById(rent.getHouseNumber());
         rent.setRentStatus(RentStatus.GENERATED);
-        return rentRepository.save(rent);
+        if (house.isPresent()) {
+            house.get().getRents().add(rent);
+            houseRepository.save(house.get());
+        }
+        return rent;
     }
 
     @PatchMapping("/rent")
