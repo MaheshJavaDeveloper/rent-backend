@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "rent")
@@ -35,7 +37,13 @@ public class Rent {
 
     private Integer totalRent;
 
+    private Long houseOwnerId;
+
     @Enumerated(EnumType.STRING)
     private RentStatus rentStatus;
+
+    @OneToMany
+    @JoinColumn(name = "rent_id")
+    private Set<Payment> payments = new HashSet<>();
 
 }

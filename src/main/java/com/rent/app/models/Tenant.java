@@ -18,6 +18,6 @@ public class Tenant {
 
     private String status;
 
-    private String houseNumber;
+    private Long houseOwnerId;
 
 }

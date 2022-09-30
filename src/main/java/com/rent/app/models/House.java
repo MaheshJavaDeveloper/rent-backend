@@ -3,6 +3,8 @@ package com.rent.app.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "house")
@@ -24,8 +26,14 @@ public class House {
 
     private Integer rentFixed;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "current_tenant_id", referencedColumnName = "id")
-    private Tenant currentTenant;
+    private Long houseOwnerId;
+
+    @OneToMany
+    @JoinColumn(name = "house_id")
+    private Set<Rent> rents = new HashSet<>();
+
+    @OneToOne
+    @JoinColumn(name = "house_id")
+    private Tenant tenant;
 
 }
