@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,13 +22,22 @@ public class HouseController {
 
     @GetMapping(value = "/house", produces = "application/json")
     public List<House> getHouse() {
-      return  houseRepository.findAll();
+        return houseRepository.findAll();
+    }
+
+    @GetMapping(value = "/house/owner/{id}", produces = "application/json")
+    public List<House> getHouseByOwner(@PathVariable Long id) {
+        Optional<List<House>> houses = houseRepository.findByHouseOwnerId(id);
+        if (houses.isPresent()) {
+            return houses.get();
+        }
+        return new ArrayList<>();
     }
 
     @GetMapping("/house/{id}")
     public House getHouse(@PathVariable Long id) {
-        Optional<House> house= houseRepository.findById(id);
-        if(house.isPresent()){
+        Optional<House> house = houseRepository.findById(id);
+        if (house.isPresent()) {
             return house.get();
         }
         return null;
