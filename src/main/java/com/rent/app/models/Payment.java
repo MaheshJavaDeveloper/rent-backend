@@ -3,6 +3,7 @@ package com.rent.app.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -12,8 +13,14 @@ public class Payment {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private Long amount;
+    private Integer amount;
 
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private PaymentType type;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMode mode;
+
+    private Date paymentDate;
 
 }

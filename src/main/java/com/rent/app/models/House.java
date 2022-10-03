@@ -38,4 +38,6 @@ public class House {
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
 
+
+
 }

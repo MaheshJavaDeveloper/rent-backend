@@ -2,6 +2,7 @@ package com.rent.app.controllers;
 
 import com.rent.app.models.ERole;
 import com.rent.app.models.Role;
+import com.rent.app.models.Tenant;
 import com.rent.app.models.User;
 import com.rent.app.payload.request.LoginRequest;
 import com.rent.app.payload.request.SignupRequest;
@@ -11,6 +12,8 @@ import com.rent.app.repository.RoleRepository;
 import com.rent.app.repository.UserRepository;
 import com.rent.app.security.jwt.JwtUtils;
 import com.rent.app.security.services.UserDetailsImpl;
+import com.rent.app.security.services.export.ExportPdfService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,10 +23,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -44,6 +48,9 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils;
+
+  @Autowired
+  private ExportPdfService exportPdfService;
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -120,4 +127,5 @@ public class AuthController {
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
+
 }

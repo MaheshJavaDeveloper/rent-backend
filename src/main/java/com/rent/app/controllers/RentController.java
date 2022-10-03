@@ -1,17 +1,21 @@
 package com.rent.app.controllers;
 
-import com.rent.app.models.House;
-import com.rent.app.models.Rent;
-import com.rent.app.models.RentStatus;
+import com.rent.app.models.*;
 import com.rent.app.repository.HouseRepository;
+import com.rent.app.repository.PaymentRepository;
 import com.rent.app.repository.RentRepository;
+import com.rent.app.security.services.export.ExportPdfService;
+import liquibase.repackaged.org.apache.commons.lang3.RandomStringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -25,6 +29,12 @@ public class RentController {
     @Autowired
     HouseRepository houseRepository;
     private Optional<House> house;
+
+    @Autowired
+    private ExportPdfService exportPdfService;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @GetMapping(value = "/rent", produces = "application/json")
     public List<Rent> getRents() {
@@ -52,7 +62,8 @@ public class RentController {
     @PostMapping("/rent")
     public Rent createRent(@Valid @RequestBody Rent rent) {
         rent.setRentStatus(RentStatus.GENERATED);
-        Rent savedRent=rentRepository.save(rent);
+        rent.setInvoiceNumber("RI"+RandomStringUtils.randomAlphabetic(3).toUpperCase()+RandomStringUtils.randomNumeric(5));
+        Rent savedRent = rentRepository.save(rent);
         Optional<House> house = houseRepository.findById(rent.getHouseNumber());
         if (house.isPresent()) {
             house.get().getRents().add(savedRent);
@@ -67,6 +78,13 @@ public class RentController {
             Optional<House> house = houseRepository.findById(rent.getHouseNumber());
             if (house.isPresent()) {
                 if (RentStatus.PAID == rent.getRentStatus()) {
+                    Payment payment=new Payment();
+                    payment.setAmount(rent.getTotalRent());
+                    payment.setPaymentDate(new Date());
+                    payment.setType(PaymentType.FULL);
+                    payment.setMode(PaymentMode.CASH);
+                    paymentRepository.save(payment);
+                    rent.getPayments().add(payment);
                     house.get().setOverallMeterReading(rent.getCurrentMeterReading());
                 }
                 if (RentStatus.UNPAID == rent.getRentStatus()) {
@@ -82,5 +100,25 @@ public class RentController {
     public String createHouse(@PathVariable Long id) {
         rentRepository.deleteById(id);
         return "Successfully Deleted";
+    }
+
+    @GetMapping("rent/downloadReceipt/{id}")
+    public void downloadReceipt(@PathVariable Long id, HttpServletResponse response) throws IOException {
+
+        log.info(String.valueOf(rentRepository.findById(id).get()));
+        Map<String, Object> data = createReportData(id);
+        ByteArrayInputStream exportedData = exportPdfService.exportReceiptPdf("receipt", data);
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=receipt.pdf");
+        IOUtils.copy(exportedData, response.getOutputStream());
+    }
+
+    public Map<String, Object> createReportData(Long id) {
+        Optional<Rent> rent =rentRepository.findById(id);
+        Optional<House> house = houseRepository.findById(rent.get().getHouseNumber());
+        Map<String, Object> data = new HashMap<>();
+        data.put("rent", rent.get());
+        data.put("house", house.get());
+        return data;
     }
 }

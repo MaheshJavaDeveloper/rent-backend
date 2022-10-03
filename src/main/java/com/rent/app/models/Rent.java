@@ -1,5 +1,6 @@
 package com.rent.app.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,6 +17,9 @@ public class Rent {
     private Long id;
 
     private Long houseNumber;
+
+    @Column(unique=true)
+    private String invoiceNumber;
 
     private Date billDate;
 
