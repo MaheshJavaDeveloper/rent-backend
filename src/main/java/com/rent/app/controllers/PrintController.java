@@ -1,5 +1,6 @@
 package com.rent.app.controllers;
 
+import com.rent.app.Handler.Messagehandler;
 import com.rent.app.models.House;
 import com.rent.app.models.Rent;
 import com.rent.app.repository.HouseRepository;
@@ -30,14 +31,17 @@ public class PrintController {
     @Autowired
     private ExportPdfService exportPdfService;
 
+    @Autowired
+    Messagehandler messagehandler;
+
     @GetMapping("rent/downloadReceipt/{id}")
     public void downloadReceipt(@PathVariable Long id, HttpServletResponse response) throws IOException {
 
-        log.info(String.valueOf(rentRepository.findById(id).get()));
+        Rent rent = rentRepository.findById(id).get();
         Map<String, Object> data = createReportData(id);
         ByteArrayInputStream exportedData = exportPdfService.exportReceiptPdf("receipt", data);
         response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; filename=receipt.pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=Rent_"+rent.getInvoiceNumber()+".pdf");
         IOUtils.copy(exportedData, response.getOutputStream());
     }
 
@@ -49,4 +53,6 @@ public class PrintController {
         data.put("house", house.get());
         return data;
     }
+
+
 }

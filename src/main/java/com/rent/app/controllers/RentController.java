@@ -1,5 +1,6 @@
 package com.rent.app.controllers;
 
+import com.rent.app.Handler.Messagehandler;
 import com.rent.app.models.*;
 import com.rent.app.repository.HouseRepository;
 import com.rent.app.repository.PaymentRepository;
@@ -28,13 +29,15 @@ public class RentController {
 
     @Autowired
     HouseRepository houseRepository;
-    private Optional<House> house;
 
     @Autowired
     private ExportPdfService exportPdfService;
 
     @Autowired
     private PaymentRepository paymentRepository;
+
+    @Autowired
+    Messagehandler messagehandler;
 
     @GetMapping(value = "/rent", produces = "application/json")
     public List<Rent> getRents() {
@@ -111,6 +114,13 @@ public class RentController {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=receipt.pdf");
         IOUtils.copy(exportedData, response.getOutputStream());
+    }
+
+    @GetMapping("rent/sendReceipt/{id}")
+    public void sendReceipt(@PathVariable Long id) throws Exception {
+        Optional<Rent> rent =rentRepository.findById(id);
+        Optional<House> house = houseRepository.findById(rent.get().getHouseNumber());
+        messagehandler.sendMessage("","https://rent-backend-api.herokuapp.com/api/auth/rent/downloadReceipt/"+id,house.get().getTenant().getPhone());
     }
 
     public Map<String, Object> createReportData(Long id) {

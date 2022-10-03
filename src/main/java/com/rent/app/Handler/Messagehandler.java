@@ -8,21 +8,26 @@ import com.twilio.rest.api.v2010.account.Message;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.URI;
+import java.util.Arrays;
+
 @Slf4j
 @Service
 public class Messagehandler {
 
-	@Value("$WhatsappToken")
+	@Value("${WhatsappToken}")
 	private String AUTH_TOKEN;
 
-	@Value("$WhatsappToken")
+	@Value("${WhatsappSID}")
 	private String ACCOUNT_SID;
 
-	public String sendMessage(String message, String phoneNumber) throws Exception {
+	public String sendMessage(String message,String medialUrl, String phoneNumber) throws Exception {
+
+		log.info(AUTH_TOKEN + ACCOUNT_SID);
 		try {
 			Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 			Message response = Message.creator(new com.twilio.type.PhoneNumber("whatsapp:+91" + phoneNumber),
-					new com.twilio.type.PhoneNumber("whatsapp:+14155238886"), message).create();
+					new com.twilio.type.PhoneNumber("whatsapp:+14155238886"), Arrays.asList(URI.create(medialUrl))).create();
 
 		} catch (Exception e) {
 			log.error("Error in provessing message" + e);
