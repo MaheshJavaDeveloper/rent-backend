@@ -25,7 +25,7 @@ public class Messagehandler {
 
 		log.info(AUTH_TOKEN + ACCOUNT_SID + medialUrl);
 		try {
-			Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+			Twilio.init(ACCOUNT_SID, AUTH_TOKEN + phoneNumber);
 			Message response = Message.creator(new com.twilio.type.PhoneNumber("whatsapp:+91" + phoneNumber),
 					new com.twilio.type.PhoneNumber("whatsapp:+14155238886"), Arrays.asList(URI.create(medialUrl))).create();
 
