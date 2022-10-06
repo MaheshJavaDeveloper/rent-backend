@@ -26,11 +26,12 @@ public class Messagehandler {
 		log.info(AUTH_TOKEN + ACCOUNT_SID + medialUrl + phoneNumber);
 		try {
 			Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+			log.info("Started sending message");
 			Message response = Message.creator(new com.twilio.type.PhoneNumber("whatsapp:+91" + phoneNumber),
 					new com.twilio.type.PhoneNumber("whatsapp:+14155238886"), Arrays.asList(URI.create(medialUrl))).create();
-
+			log.info("End sending message");
 		} catch (Exception e) {
-			log.error("Error in provessing message" + e);
+			log.error("Error in processing message" + e);
 			throw new Exception();
 		}
 
