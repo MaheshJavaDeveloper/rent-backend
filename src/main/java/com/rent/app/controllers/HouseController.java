@@ -34,6 +34,15 @@ public class HouseController {
         return new ArrayList<>();
     }
 
+    @GetMapping(value = "/house/count/owner/{id}", produces = "application/json")
+    public Integer getHouseCountsByOwner(@PathVariable Long id) {
+        Optional<List<House>> houses = houseRepository.findByHouseOwnerId(id);
+        if (houses.isPresent()) {
+            return houses.get().size();
+        }
+        return 0;
+    }
+
     @GetMapping("/house/{id}")
     public House getHouse(@PathVariable Long id) {
         Optional<House> house = houseRepository.findById(id);
