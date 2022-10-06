@@ -23,7 +23,7 @@ public class Messagehandler {
 
 	public String sendMessage(String message,String medialUrl, String phoneNumber) throws Exception {
 
-		log.info(AUTH_TOKEN + ACCOUNT_SID);
+		log.info(AUTH_TOKEN + ACCOUNT_SID + medialUrl);
 		try {
 			Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 			Message response = Message.creator(new com.twilio.type.PhoneNumber("whatsapp:+91" + phoneNumber),

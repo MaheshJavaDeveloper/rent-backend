@@ -10,6 +10,7 @@ import liquibase.repackaged.org.apache.commons.lang3.RandomStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +39,9 @@ public class RentController {
 
     @Autowired
     Messagehandler messagehandler;
+
+    @Value("${backend-api}")
+    private String backendApi;
 
     @GetMapping(value = "/rent", produces = "application/json")
     public List<Rent> getRents() {
@@ -120,7 +124,7 @@ public class RentController {
     public void sendReceipt(@PathVariable Long id) throws Exception {
         Optional<Rent> rent =rentRepository.findById(id);
         Optional<House> house = houseRepository.findById(rent.get().getHouseNumber());
-        messagehandler.sendMessage("","https://rent-backend-api.herokuapp.com/api/auth/rent/downloadReceipt/"+id,house.get().getTenant().getPhone());
+        messagehandler.sendMessage("",backendApi+id,house.get().getTenant().getPhone());
     }
 
     public Map<String, Object> createReportData(Long id) {
