@@ -1,12 +1,10 @@
 package com.rent.app.controllers;
 
-import com.rent.app.Handler.Messagehandler;
 import com.rent.app.models.House;
 import com.rent.app.models.Rent;
 import com.rent.app.repository.HouseRepository;
 import com.rent.app.repository.RentRepository;
 import com.rent.app.security.services.export.ExportPdfService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +19,6 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
-@Slf4j
 public class PrintController {
 
     @Autowired
@@ -30,9 +27,6 @@ public class PrintController {
     HouseRepository houseRepository;
     @Autowired
     private ExportPdfService exportPdfService;
-
-    @Autowired
-    Messagehandler messagehandler;
 
     @GetMapping("rent/downloadReceipt/{id}")
     public void downloadReceipt(@PathVariable Long id, HttpServletResponse response) throws IOException {
