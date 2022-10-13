@@ -44,7 +44,7 @@ public class MailHandler {
 	@Autowired
 	UserRepository userRepository;
 
-	private final String SUBJECT_RECEIPT = "Rental Homes - Receipt generated";
+	private final String SUBJECT_RECEIPT = "Rental Homes - Receipt updates";
 
 	public void sendSimpleMessage(String to, String messageBody, String subject) throws Exception {
 		JavaMailSenderImpl mailSender = mailConfig.mailBean();

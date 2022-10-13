@@ -91,7 +91,7 @@ public class RentController {
 	}
 
 	@PostMapping("/rent")
-	public Rent createRent(@Valid @RequestBody Rent rent) {
+	public Rent createRent(@Valid @RequestBody Rent rent) throws Exception {
 		rent.setRentStatus(RentStatus.GENERATED);
 		rent.setInvoiceNumber(
 				"RI" + RandomStringUtils.randomAlphabetic(3).toUpperCase() + RandomStringUtils.randomNumeric(5));
@@ -101,11 +101,14 @@ public class RentController {
 			house.get().getRents().add(savedRent);
 			houseRepository.save(house.get());
 		}
+
+		//send notification
+		mailHandler.sendReceipt(savedRent.getId());
 		return rent;
 	}
 
 	@PatchMapping("/rent")
-	public Rent updateRent(@Valid @RequestBody Rent rent) {
+	public Rent updateRent(@Valid @RequestBody Rent rent) throws Exception {
 		if (RentStatus.PAID == rent.getRentStatus() || RentStatus.UNPAID == rent.getRentStatus()) {
 			Optional<House> house = houseRepository.findById(rent.getHouseNumber());
 			if (house.isPresent()) {
@@ -125,6 +128,8 @@ public class RentController {
 				houseRepository.save(house.get());
 			}
 		}
+		//send notification
+		mailHandler.sendReceipt(rent.getId());
 		return rentRepository.save(rent);
 	}
 
