@@ -101,7 +101,6 @@ public class RentController {
 			house.get().getRents().add(savedRent);
 			houseRepository.save(house.get());
 		}
-
 		//send notification
 		mailHandler.sendReceipt(savedRent.getId());
 		return rent;
@@ -128,9 +127,13 @@ public class RentController {
 				houseRepository.save(house.get());
 			}
 		}
+
+		//Save Rent
+		rentRepository.save(rent);
+
 		//send notification
 		mailHandler.sendReceipt(rent.getId());
-		return rentRepository.save(rent);
+		return rent;
 	}
 
 	@DeleteMapping("/rent/{id}")
