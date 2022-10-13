@@ -3,6 +3,7 @@ package com.rent.app.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,6 +31,8 @@ public class House {
 
     private Integer pricePerUnit;
 
+    private Date dueDate;
+
     @OneToMany
     @JoinColumn(name = "house_id")
     private Set<Rent> rents = new HashSet<>();
@@ -37,7 +40,5 @@ public class House {
     @OneToOne
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
-
-
 
 }

@@ -23,6 +23,8 @@ public class Rent {
 
     private Date billDate;
 
+    private Date dueDate;
+
     private Integer rentAmount;
 
     private Integer currentMeterReading;

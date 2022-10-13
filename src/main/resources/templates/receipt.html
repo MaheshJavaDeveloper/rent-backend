@@ -761,6 +761,7 @@
                 <div class="cs-invoice_left">
                     <p class="cs-invoice_number cs-primary_color cs-mb5 cs-f16"><b class="cs-primary_color">Rental Invoice No:</b> <span th:text="${rent.invoiceNumber}"></span></p>
                     <p class="cs-invoice_date cs-primary_color cs-m0"><b class="cs-primary_color">Bill Date: </b><span th:text="${#dates.format(rent.billDate, 'dd-MMM-yyyy')}"></span></p>
+                    <p class="cs-invoice_date cs-primary_color cs-m0"><b class="cs-primary_color">Due Date: </b><span th:text="${#dates.format(rent.dueDate, 'dd-MMM-yyyy')}"></span></p>
                     <p class="cs-invoice_date cs-primary_color cs-m0"><b class="cs-primary_color">Status: </b><span th:text="${rent.rentStatus}"></span></p>
                 </div>
             </div>
