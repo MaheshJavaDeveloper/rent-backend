@@ -22,7 +22,7 @@ public class Messagehandler {
 	@Value("${WhatsappSID}")
 	private String ACCOUNT_SID;
 
-	public String sendMessage(String message, String medialUrl, String phoneNumber) throws Exception {
+	public String sendMessage(String medialUrl, String phoneNumber) throws Exception {
 
 		try {
 			Twilio.init(CryptoUtil.decrypt(ACCOUNT_SID), CryptoUtil.decrypt(AUTH_TOKEN));
