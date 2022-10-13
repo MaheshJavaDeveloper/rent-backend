@@ -74,8 +74,8 @@ public class MailHandler {
 		data.put("house", house.get());
 		MimeMessageHelper helper = new MimeMessageHelper(mail, true);
 		helper.setFrom(domainMail);
-		helper.setTo(user.get().getEmail());
-		helper.setSubject(SUBJECT_RECEIPT +" - "+ rent.get().getInvoiceNumber() +" - "+ rent.get().getBillDate());
+		helper.setTo(house.get().getTenant().getEmail());
+		helper.setSubject(SUBJECT_RECEIPT +" - "+ rent.get().getInvoiceNumber() +" - "+ rent.get().getBillDate().toString());
 		helper.setText(templateEngine.process("receipt", getContext(data)), true);
 		mailSender.send(mail);
 

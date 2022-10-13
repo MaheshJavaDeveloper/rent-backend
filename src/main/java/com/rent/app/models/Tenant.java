@@ -16,6 +16,8 @@ public class Tenant {
 
     private String phone;
 
+    private String email;
+
     private String status;
 
     private Long houseOwnerId;
