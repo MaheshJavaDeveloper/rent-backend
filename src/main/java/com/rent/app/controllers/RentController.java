@@ -2,7 +2,11 @@ package com.rent.app.controllers;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -88,17 +92,11 @@ public class RentController {
 
 	@PostMapping("/rent")
 	public Rent createRent(@Valid @RequestBody Rent rent) throws Exception {
-		Optional<House> house = houseRepository.findById(rent.getHouseNumber());
 		rent.setRentStatus(RentStatus.GENERATED);
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DATE,house.get().getDueDate().getDate());
-		cal.set(Calendar.MONTH, new Date().getMonth());
-		cal.set(Calendar.YEAR, new Date().getYear());
-		rent.setDueDate(cal.getTime());
 		rent.setInvoiceNumber(
 				"RI" + RandomStringUtils.randomAlphabetic(3).toUpperCase() + RandomStringUtils.randomNumeric(5));
 		Rent savedRent = rentRepository.save(rent);
-
+		Optional<House> house = houseRepository.findById(rent.getHouseNumber());
 		if (house.isPresent()) {
 			house.get().getRents().add(savedRent);
 			houseRepository.save(house.get());
