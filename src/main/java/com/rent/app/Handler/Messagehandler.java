@@ -26,10 +26,11 @@ public class Messagehandler {
 
 		try {
 			Twilio.init(CryptoUtil.decrypt(ACCOUNT_SID), CryptoUtil.decrypt(AUTH_TOKEN));
-			Message response = Message.creator(new com.twilio.type.PhoneNumber("whatsapp:+91" + phoneNumber),
-					new com.twilio.type.PhoneNumber("whatsapp:+14155238886"), Arrays.asList(URI.create(medialUrl)))
-					.create();
-
+			if(null != phoneNumber) {
+				Message response = Message.creator(new com.twilio.type.PhoneNumber("whatsapp:+91" + phoneNumber),
+						new com.twilio.type.PhoneNumber("whatsapp:+14155238886"), Arrays.asList(URI.create(medialUrl)))
+						.create();
+			}
 		} catch (Exception e) {
 			log.error("Error in provessing message" + e);
 			throw new Exception();

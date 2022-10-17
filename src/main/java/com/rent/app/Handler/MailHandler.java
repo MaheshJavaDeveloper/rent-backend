@@ -77,7 +77,9 @@ public class MailHandler {
 		helper.setTo(house.get().getTenant().getEmail());
 		helper.setSubject(SUBJECT_RECEIPT +" - "+ rent.get().getInvoiceNumber() +" - "+ house.get().getName());
 		helper.setText(templateEngine.process("receipt", getContext(data)), true);
-		mailSender.send(mail);
+        if (null != house.get().getTenant().getEmail()) {
+            mailSender.send(mail);
+        }
 
 	}
 
