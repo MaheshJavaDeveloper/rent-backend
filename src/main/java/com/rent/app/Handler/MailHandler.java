@@ -72,13 +72,13 @@ public class MailHandler {
 		Map<String, Object> data = new HashMap<>();
 		data.put("rent", rent.get());
 		data.put("house", house.get());
-		MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-		helper.setFrom(domainMail,"Rental Management App");
-		helper.setTo(house.get().getTenant().getEmail());
-		helper.setSubject(SUBJECT_RECEIPT +" - "+ rent.get().getInvoiceNumber() +" - "+ house.get().getName());
-		helper.setText(templateEngine.process("receipt", getContext(data)), true);
-        if (null != house.get().getTenant().getEmail()) {
-            mailSender.send(mail);
+		if (null != house.get().getTenant().getEmail()) {
+			MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+			helper.setFrom(domainMail,"Rental Management App");
+			helper.setTo(house.get().getTenant().getEmail());
+			helper.setSubject(SUBJECT_RECEIPT +" - "+ rent.get().getInvoiceNumber() +" - "+ house.get().getName());
+			helper.setText(templateEngine.process("receipt", getContext(data)), true);
+			mailSender.send(mail);
         }
 
 	}
