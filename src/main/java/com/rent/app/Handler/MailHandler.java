@@ -72,7 +72,7 @@ public class MailHandler {
 		Map<String, Object> data = new HashMap<>();
 		data.put("rent", rent.get());
 		data.put("house", house.get());
-		if (null != house.get().getTenant().getEmail()) {
+		if (null != house.get().getTenant().getEmail() && !house.get().getTenant().getEmail().isEmpty()) {
 			MimeMessageHelper helper = new MimeMessageHelper(mail, true);
 			helper.setFrom(domainMail,"Rental Management App");
 			helper.setTo(house.get().getTenant().getEmail());
