@@ -44,7 +44,7 @@ public class TestController {
     return "Admin Board.";
   }
 
-  @GetMapping("/users")
+  @GetMapping(value = "/users",produces = "application/json")
 //  @PreAuthorize("hasRole('ADMIN')")
   public List<User> getUsers() {
     return userRepository.findAll();
